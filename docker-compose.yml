@@ -1,0 +1,65 @@
+version: "3.9"
+ 
+services:
+    mysql:
+        image: mysql:latest
+        command: --default-authentication-plugin=mysql_native_password
+        container_name: "${DOCKER_PROJECT_CONTAINER_PREFIX}_mysql"
+        volumes:
+            - ../mysql/db/data/:/var/lib/mysql/
+            - ../mysql/import:/import
+            - ../mysql/export:/export
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DOCKER_PROJECT_MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${DOCKER_PROJECT_MYSQL_DATABASE_NAME}
+            MYSQL_USER: ${DOCKER_PROJECT_MYSQL_USER}
+            MYSQL_PASSWORD: ${DOCKER_PROJECT_MYSQL_PASSWORD}
+    
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        container_name: "${DOCKER_PROJECT_CONTAINER_PREFIX}_phpmyadmin"
+        ports:
+            - "${DOCKER_PROJECT_PORT_PHPMYADMIN}:80"
+        environment:
+            PMA_HOST: mysql
+            PMA_USER: root
+            PMA_PASSWORD: ${DOCKER_PROJECT_MYSQL_ROOT_PASSWORD}
+            MAX_EXECUTION_TIME: 18000
+            MEMORY_LIMIT: 2048M
+            UPLOAD_LIMIT: 2024M
+
+    php:
+        build: 
+            context: './php/'
+            args:
+                IMAGE_USER: ${DOCKER_PROJECT_IMAGE_USER}
+                IMAGE_USER_UID: ${DOCKER_PROJECT_IMAGE_USER_UID}
+                IMAGE_USER_GID: ${DOCKER_PROJECT_IMAGE_USER_GID}
+                WEB_USER: ${DOCKER_PROJECT_WEB_USER}
+                DOCKER_PROJECT_NAME: ${DOCKER_PROJECT_NAME}
+                DOCKER_PROJECT_TIMEZONE: ${DOCKER_PROJECT_TIMEZONE}
+                DOCKER_PROJECT_PHP_VERSION: ${DOCKER_PROJECT_PHP_VERSION}
+                DOCKER_PROJECT_NODEJS_VERSION: ${DOCKER_PROJECT_NODEJS_VERSION}
+                DOCKER_PROJECT_UBUNTU_EXTRA_PACKAGES: ${DOCKER_PROJECT_UBUNTU_EXTRA_PACKAGES}
+                DOCKER_PROJECT_COMPOSER_EXTRA_GLOBAL_PACKAGES: ${DOCKER_PROJECT_COMPOSER_EXTRA_GLOBAL_PACKAGES}
+                DOCKER_PROJECT_NODEJS_EXTRA_GLOBAL_PACKAGES: ${DOCKER_PROJECT_NODEJS_EXTRA_GLOBAL_PACKAGES}
+                DOCKER_PROJECT_MAIL_DOMAIN: ${DOCKER_PROJECT_MAIL_DOMAIN}
+                DOCKER_PROJECT_MAIL_SMTP_HOST: ${DOCKER_PROJECT_MAIL_SMTP_HOST}
+                DOCKER_PROJECT_MAIL_SMTP_PORT: ${DOCKER_PROJECT_MAIL_SMTP_PORT}
+                DOCKER_PROJECT_MAIL_USER: ${DOCKER_PROJECT_MAIL_USER}
+                DOCKER_PROJECT_MAIL_PASSWORD: ${DOCKER_PROJECT_MAIL_PASSWORD}
+                DOCKER_PROJECT_PHP_MEMORY_LIMIT: ${DOCKER_PROJECT_PHP_MEMORY_LIMIT}
+                DOCKER_PROJECT_PHP_XDEBUG_REMOTE_HOST: ${DOCKER_PROJECT_PHP_XDEBUG_REMOTE_HOST}
+                DOCKER_PROJECT_PHP_XDEBUG_REMOTE_PORT: ${DOCKER_PROJECT_PHP_XDEBUG_REMOTE_PORT}
+                DOCKER_PROJECT_GIT_USERNAME: ${DOCKER_PROJECT_GIT_USERNAME}
+                DOCKER_PROJECT_GIT_EMAIL: ${DOCKER_PROJECT_GIT_EMAIL}
+                DOCKER_PROJECT_SERVER_NAME: ${DOCKER_PROJECT_SERVER_NAME}
+                DOCKER_PROJECT_SERVER_ALIAS: ${DOCKER_PROJECT_SERVER_ALIAS}
+        container_name: "${DOCKER_PROJECT_CONTAINER_PREFIX}_php"
+        ports:
+            - "${DOCKER_PROJECT_PORT_PHP}:80"
+            - "${DOCKER_PROJECT_PORT_PHP_SECURE}:443"
+        volumes:
+            - ../${DOCKER_PROJECT_DIRECTORY_NAME}/:${DOCKER_PROJECT_WEB_ROOT}
+            - ../extra/:/var/www/extra/
+            - ../log/:/var/www/log/

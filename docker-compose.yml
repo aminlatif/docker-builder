@@ -63,3 +63,8 @@ services:
             - ../${DOCKER_PROJECT_DIRECTORY_NAME}/:${DOCKER_PROJECT_WEB_ROOT}
             - ../extra/:/var/www/extra/
             - ../log/:/var/www/log/
+            - ../settings/php/custom.ini:/etc/php/${DOCKER_PROJECT_PHP_VERSION}/apache2/conf.d/custom.ini
+            - ../settings/php/custom.ini:/etc/php/${DOCKER_PROJECT_PHP_VERSION}/cli/conf.d/custom.ini
+            - ../settings/server/apache/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
+            - ../settings/server/apache/default-ssl.conf:/etc/apache2/sites-enabled/default-ssl.conf
+            - ../settings/msmtp/msmtprc:/etc/msmtprc

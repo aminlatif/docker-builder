@@ -1,13 +1,11 @@
 #!/bin/bash
 
-
-set -o allexport
-source ./local.env
-set +o allexport
+cat local.env main.env > .env
 
 set -o allexport
 source ./.env
 set +o allexport
+
 
 mkdir ../log
 mkdir ../extra

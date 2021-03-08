@@ -1,6 +1,15 @@
 #!/bin/bash
 
-cat local.env main.env > .env
+if [ -f "./local.env" ]
+then
+	cat local.env main.env > .env
+elif [ -f "../local.env" ]
+then
+	cat ../local.env main.env > .env
+else
+	echo "No local.env file exists"
+	exit 1
+fi
 
 set -o allexport
 source ./.env

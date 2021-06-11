@@ -122,6 +122,7 @@ RUN sudo apt-get install -y \
 			php${DOCKER_PROJECT_PHP_VERSION}-mbstring \
 			php${DOCKER_PROJECT_PHP_VERSION}-soap \
 			php${DOCKER_PROJECT_PHP_VERSION}-zip \
+			php${DOCKER_PROJECT_PHP_VERSION}-mcrypt \
 			> /dev/null
 			
 RUN printf "${IFC}PHP Version: \n"

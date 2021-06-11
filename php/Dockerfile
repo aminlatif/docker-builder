@@ -139,6 +139,9 @@ RUN printf "${CEC}PHP ${DOCKER_PROJECT_PHP_VERSION} Installed.${NRC}\n"
 RUN printf "${CSC}Installing Apache...${NRC}\n"			
 
 RUN sudo apt-get install -y apache2 > /dev/null
+RUN sudo a2enmod rewrite
+RUN sudo a2enmod ssl
+RUN sudo a2enmod headers
 
 RUN printf "${CEC}Apache Installed.${NRC}\n"			
 
@@ -221,9 +224,6 @@ ADD ./certs/localhost.crt /var/www/certs/
 ADD ./certs/localhost.key /var/www/certs/
 
 RUN printf "${CEC}localhost certificates copied to server.${NRC}\n"
-
-RUN sudo a2enmod ssl
-RUN sudo a2enmod rewrite
 
 EXPOSE 80
 EXPOSE 443

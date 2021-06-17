@@ -26,7 +26,8 @@ mkdir ../settings/msmtp
 mkdir ../mysql
 mkdir ../mysql/export
 mkdir ../mysql/import
-mkdir ../${DOCKER_PROJECT_NAME}
+mkdir ../${DOCKER_PROJECT_DIRECTORY_NAME}
+mkdir ../${DOCKER_PROJECT_NODEJS_DIRECTORY_NAME}
 
 if [ ! -f "../settings/php/custom.ini" ]
 then

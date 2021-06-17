@@ -14,6 +14,8 @@ services:
             MYSQL_DATABASE: ${DOCKER_PROJECT_MYSQL_DATABASE_NAME}
             MYSQL_USER: ${DOCKER_PROJECT_MYSQL_USER}
             MYSQL_PASSWORD: ${DOCKER_PROJECT_MYSQL_PASSWORD}
+        profiles:
+            - mysql
     
     phpmyadmin:
         image: phpmyadmin/phpmyadmin:latest
@@ -27,6 +29,23 @@ services:
             MAX_EXECUTION_TIME: 18000
             MEMORY_LIMIT: 2048M
             UPLOAD_LIMIT: 2024M
+        profiles:
+            - phpmyadmin
+            
+    adminer:
+        image: michalhosna/adminer
+        container_name: "${DOCKER_PROJECT_CONTAINER_PREFIX}_adminer"
+        ports:
+            - "${DOCKER_PROJECT_PORT_ADMINER}:8080"
+        environment:
+            ADMINER_SERVER: mysql
+            ADMINER_AUTOLOGIN: 1
+            ADMINER_USERNAME: root
+            ADMINER_PASSWORD: ${DOCKER_PROJECT_MYSQL_ROOT_PASSWORD}
+            ADMINER_DB: ${DOCKER_PROJECT_MYSQL_DATABASE_NAME}
+            ADMINER_NAME: ${DOCKER_PROJECT_NAME}-adminer
+        profiles:
+            - adminer
 
     php:
         build: 
@@ -68,3 +87,41 @@ services:
             - ../settings/server/apache/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
             - ../settings/server/apache/default-ssl.conf:/etc/apache2/sites-enabled/default-ssl.conf
             - ../settings/msmtp/msmtprc:/etc/msmtprc
+        profiles:
+            - php
+            
+    nodejs:
+        build: 
+            context: './nodejs/'
+            args:
+                IMAGE_USER: ${DOCKER_PROJECT_IMAGE_USER}
+                IMAGE_USER_UID: ${DOCKER_PROJECT_IMAGE_USER_UID}
+                IMAGE_USER_GID: ${DOCKER_PROJECT_IMAGE_USER_GID}
+                WEB_USER: ${DOCKER_PROJECT_WEB_USER}
+                DOCKER_PROJECT_NAME: ${DOCKER_PROJECT_NAME}
+                DOCKER_PROJECT_TIMEZONE: ${DOCKER_PROJECT_TIMEZONE}
+                DOCKER_PROJECT_NODEJS_VERSION: ${DOCKER_PROJECT_NODEJS_VERSION}
+                DOCKER_PROJECT_NODEJS_UBUNTU_EXTRA_PACKAGES: ${DOCKER_PROJECT_UBUNTU_EXTRA_PACKAGES}
+                DOCKER_PROJECT_NODEJS_NODEJS_EXTRA_GLOBAL_PACKAGES: ${DOCKER_PROJECT_NODEJS_EXTRA_GLOBAL_PACKAGES}
+                DOCKER_PROJECT_NODEJS_START_CMD: ${DOCKER_PROJECT_NODEJS_START_CMD}
+                DOCKER_PROJECT_PORT_NODEJS: ${DOCKER_PROJECT_PORT_NODEJS}
+                DOCKER_PROJECT_MAIL_DOMAIN: ${DOCKER_PROJECT_MAIL_DOMAIN}
+                DOCKER_PROJECT_MAIL_SMTP_HOST: ${DOCKER_PROJECT_MAIL_SMTP_HOST}
+                DOCKER_PROJECT_MAIL_SMTP_PORT: ${DOCKER_PROJECT_MAIL_SMTP_PORT}
+                DOCKER_PROJECT_MAIL_USER: ${DOCKER_PROJECT_MAIL_USER}
+                DOCKER_PROJECT_MAIL_PASSWORD: ${DOCKER_PROJECT_MAIL_PASSWORD}
+                DOCKER_PROJECT_GIT_USERNAME: ${DOCKER_PROJECT_GIT_USERNAME}
+                DOCKER_PROJECT_GIT_EMAIL: ${DOCKER_PROJECT_GIT_EMAIL}
+                DOCKER_PROJECT_SERVER_NAME: ${DOCKER_PROJECT_SERVER_NAME}
+                DOCKER_PROJECT_SERVER_ALIAS: ${DOCKER_PROJECT_SERVER_ALIAS}
+        container_name: "${DOCKER_PROJECT_CONTAINER_PREFIX}_nodejs"
+        ports:
+            - "${DOCKER_PROJECT_PORT_NODEJS}:${DOCKER_PROJECT_PORT_NODEJS}"
+        volumes:
+            - ../${DOCKER_PROJECT_NODEJS_DIRECTORY_NAME}/:${DOCKER_PROJECT_WEB_ROOT}
+            - ../extra/:/var/www/extra/
+            - ../log/:/var/www/log/
+            - ../settings/msmtp/msmtprc:/etc/msmtprc
+        profiles:
+            - nodejs
+

@@ -26,8 +26,14 @@ mkdir ../settings/msmtp
 mkdir ../mysql
 mkdir ../mysql/export
 mkdir ../mysql/import
-mkdir ../${DOCKER_PROJECT_DIRECTORY_NAME}
-mkdir ../${DOCKER_PROJECT_NODEJS_DIRECTORY_NAME}
+if [[ "$COMPOSE_PROFILES" == *"php"* ]]
+then
+	mkdir ../${DOCKER_PROJECT_DIRECTORY_NAME}
+fi
+if [[ "$COMPOSE_PROFILES" == *"nodejs"* ]]
+then
+	mkdir ../${DOCKER_PROJECT_NODEJS_DIRECTORY_NAME}
+fi
 
 if [ ! -f "../settings/php/custom.ini" ]
 then

@@ -26,12 +26,15 @@ mkdir ../settings/msmtp
 mkdir ../mysql
 mkdir ../mysql/export
 mkdir ../mysql/import
+mkdir ../vscode-server
 if [[ "$COMPOSE_PROFILES" == *"php"* ]]
 then
+	mkdir ../vscode-server/php
 	mkdir ../${DOCKER_PROJECT_DIRECTORY_NAME}
 fi
 if [[ "$COMPOSE_PROFILES" == *"nodejs"* ]]
 then
+	mkdir ../vscode-server/nodejs
 	mkdir ../${DOCKER_PROJECT_NODEJS_DIRECTORY_NAME}
 fi
 

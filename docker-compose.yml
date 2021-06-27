@@ -87,6 +87,7 @@ services:
             - ../settings/server/apache/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
             - ../settings/server/apache/default-ssl.conf:/etc/apache2/sites-enabled/default-ssl.conf
             - ../settings/msmtp/msmtprc:/etc/msmtprc
+            - ../vscode-server/php:/var/www/.vscode-server/
         profiles:
             - php
             
@@ -122,6 +123,7 @@ services:
             - ../extra/:/var/www/extra/
             - ../log/:/var/www/log/
             - ../settings/msmtp/msmtprc:/etc/msmtprc
+            - ../vscode-server/nodejs:/var/www/.vscode-server/
         profiles:
             - nodejs
 

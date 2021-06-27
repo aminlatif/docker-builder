@@ -51,7 +51,7 @@ RUN useradd -s /bin/bash --uid $IMAGE_USER_UID --gid $IMAGE_USER_GID -m $IMAGE_U
 RUN echo "$IMAGE_USER ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/$IMAGE_USER
 RUN chmod 0440 /etc/sudoers.d/$IMAGE_USER
 
-RUN usermod -u $IMAGE_USER_UID -o $WEB_USER && groupmod -g $IMAGE_USER_GID -o $WEB_USER
+RUN usermod -s /bin/bash -u $IMAGE_USER_UID -o $WEB_USER && groupmod -g $IMAGE_USER_GID -o $WEB_USER
 RUN echo "$WEB_USER ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/$WEB_USER
 RUN chmod 0440 /etc/sudoers.d/$WEB_USER
 
@@ -133,4 +133,5 @@ EXPOSE ${DOCKER_PROJECT_PORT_NODEJS}
 
 WORKDIR /var/www/html
 
-CMD ${DOCKER_PROJECT_NODEJS_START_CMD}
+# CMD ${DOCKER_PROJECT_NODEJS_START_CMD}
+CMD sudo sh -c 'sleep infinity'

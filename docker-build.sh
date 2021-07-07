@@ -72,7 +72,17 @@ then
     sed -i "s|{{DOCKER_PROJECT_MAIL_PASSWORD}}|${DOCKER_PROJECT_MAIL_PASSWORD}|g" ../settings/msmtp/msmtprc
 fi
 
-
+if [ ! -f "./docker-compose.yml" ]
+then
+	cp ./docker-compose-env.yml ./docker-compose.yml
+	env | while IFS= read -r line; do
+		value=${line#*=}
+		name=${line%%=*}
+		printf "Replacing '%s'='%s'\n" "$name" "$value"
+		sed -i "s%\${${name}}%${value}%g" ./docker-compose.yml
+	done
+	sed -i 's%\$%\$\$%g' ./docker-compose.yml
+fi
 
 if [ "$1" = "rebuild" ]
 then
